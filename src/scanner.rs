@@ -1,3 +1,5 @@
+use crate::csets::CharacterSet;
+
 pub struct Scanner {
 	source: Box<[char]>,
 	position: usize,
@@ -58,5 +60,32 @@ impl Scanner {
 	pub fn advance_if_starts_with(&mut self, substring: impl AsRef<str>) -> Option<String> {
 		let position = self.starts_with(substring)?;
 		self.goto(position)
+	}
+
+	pub fn any(&self, cset: impl CharacterSet) -> Option<usize> {
+		cset.contains(*self.source.get(self.position)?)
+			.then_some(self.position + 1)
+	}
+
+	pub fn many(&self, cset: impl CharacterSet) -> Option<usize> {
+		if !cset.contains(*self.source.get(self.position)?) {
+			return None;
+		}
+
+		let mut i = self.position;
+		while i < self.source.len() && cset.contains(self.source[i]) {
+			i += 1;
+		}
+
+		Some(i)
+	}
+
+	pub fn upto(&self, cset: impl CharacterSet) -> Option<usize> {
+		let mut i = self.position;
+		while !cset.contains(*self.source.get(i)?) {
+			i += 1;
+		}
+
+		Some(i)
 	}
 }
