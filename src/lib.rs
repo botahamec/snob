@@ -1,2 +1,4 @@
 pub mod csets;
-pub mod scanner;
+mod scanner;
+
+pub use scanner::Scanner;
