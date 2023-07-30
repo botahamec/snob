@@ -26,6 +26,10 @@ pub trait CharacterSet: Sized {
 			second: other,
 		}
 	}
+
+	fn complement(self) -> CharacterSetComplement<Self> {
+		CharacterSetComplement { inner: self }
+	}
 }
 
 pub struct AnyCharacter;
