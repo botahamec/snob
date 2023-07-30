@@ -34,4 +34,24 @@ impl Scanner {
 	pub fn advance(&mut self, amount: usize) -> Option<String> {
 		self.goto(self.position + amount)
 	}
+
+	pub fn find_substring(&self, substring: impl AsRef<str>) -> Option<usize> {
+		self.source
+			.get(self.position..)?
+			.iter()
+			.collect::<String>()
+			.find(substring.as_ref())
+	}
+
+	pub fn starts_with(&self, substring: impl AsRef<str>) -> Option<usize> {
+		let mut i = self.position;
+		for substring_char in substring.as_ref().chars() {
+			if *self.source.get(i)? != substring_char {
+				return None;
+			}
+			i += 1;
+		}
+
+		Some(i)
+	}
 }
