@@ -13,6 +13,22 @@ impl Scanner {
 		}
 	}
 
+	pub fn source(&self) -> &[char] {
+		&self.source
+	}
+
+	pub fn len(&self) -> usize {
+		self.source.len()
+	}
+
+	pub fn is_empty(&self) -> bool {
+		self.len() == 0
+	}
+
+	pub fn get_char_at(&self, index: usize) -> Option<char> {
+		self.source.get(index).cloned()
+	}
+
 	pub fn position(&self) -> usize {
 		self.position
 	}
@@ -33,8 +49,9 @@ impl Scanner {
 		Some(production)
 	}
 
-	pub fn advance(&mut self, amount: usize) -> Option<String> {
-		self.goto(self.position + amount)
+	pub fn advance(&mut self, amount: isize) -> Option<String> {
+		let position = self.position.checked_add_signed(amount)?;
+		self.goto(position)
 	}
 
 	pub fn find_substring(&self, substring: impl AsRef<str>) -> Option<usize> {
