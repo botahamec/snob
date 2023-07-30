@@ -1,7 +1,31 @@
 use std::collections::HashSet;
 
-pub trait CharacterSet {
+pub trait CharacterSet: Sized {
 	fn contains(&self, ch: char) -> bool;
+
+	fn union<Other: CharacterSet>(self, other: Other) -> CharacterSetUnion<Self, Other> {
+		CharacterSetUnion {
+			first: self,
+			second: other,
+		}
+	}
+
+	fn intersection<Other: CharacterSet>(
+		self,
+		other: Other,
+	) -> CharacterSetIntersection<Self, Other> {
+		CharacterSetIntersection {
+			first: self,
+			second: other,
+		}
+	}
+
+	fn difference<Other: CharacterSet>(self, other: Other) -> CharacterSetDifference<Self, Other> {
+		CharacterSetDifference {
+			first: self,
+			second: other,
+		}
+	}
 }
 
 pub struct AnyCharacter;
@@ -73,5 +97,48 @@ impl CharacterSet for &str {
 impl CharacterSet for HashSet<char> {
 	fn contains(&self, ch: char) -> bool {
 		self.contains(&ch)
+	}
+}
+
+pub struct CharacterSetUnion<A: CharacterSet, B: CharacterSet> {
+	first: A,
+	second: B,
+}
+
+impl<A: CharacterSet, B: CharacterSet> CharacterSet for CharacterSetUnion<A, B> {
+	fn contains(&self, ch: char) -> bool {
+		self.first.contains(ch) || self.second.contains(ch)
+	}
+}
+
+pub struct CharacterSetIntersection<A: CharacterSet, B: CharacterSet> {
+	first: A,
+	second: B,
+}
+
+impl<A: CharacterSet, B: CharacterSet> CharacterSet for CharacterSetIntersection<A, B> {
+	fn contains(&self, ch: char) -> bool {
+		self.first.contains(ch) && self.second.contains(ch)
+	}
+}
+
+pub struct CharacterSetDifference<A: CharacterSet, B: CharacterSet> {
+	first: A,
+	second: B,
+}
+
+impl<A: CharacterSet, B: CharacterSet> CharacterSet for CharacterSetDifference<A, B> {
+	fn contains(&self, ch: char) -> bool {
+		self.first.contains(ch) && !self.second.contains(ch)
+	}
+}
+
+pub struct CharacterSetComplement<Inner: CharacterSet> {
+	inner: Inner,
+}
+
+impl<Inner: CharacterSet> CharacterSet for CharacterSetComplement<Inner> {
+	fn contains(&self, ch: char) -> bool {
+		!self.inner.contains(ch)
 	}
 }
