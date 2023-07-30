@@ -52,6 +52,12 @@ impl CharacterSet for AsciiLetters {
 	}
 }
 
+impl CharacterSet for char {
+	fn contains(&self, ch: char) -> bool {
+		*self == ch
+	}
+}
+
 impl CharacterSet for &[char] {
 	fn contains(&self, ch: char) -> bool {
 		(self as &[char]).contains(&ch)
