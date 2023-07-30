@@ -1,11 +1,13 @@
+use std::collections::HashSet;
+
 pub trait CharacterSet {
-	fn contains(ch: char) -> bool;
+	fn contains(&self, ch: char) -> bool;
 }
 
 pub struct AnyCharacter;
 
 impl CharacterSet for AnyCharacter {
-	fn contains(_: char) -> bool {
+	fn contains(&self, _: char) -> bool {
 		true
 	}
 }
@@ -13,7 +15,7 @@ impl CharacterSet for AnyCharacter {
 pub struct Ascii;
 
 impl CharacterSet for Ascii {
-	fn contains(ch: char) -> bool {
+	fn contains(&self, ch: char) -> bool {
 		ch.is_ascii()
 	}
 }
@@ -21,7 +23,7 @@ impl CharacterSet for Ascii {
 pub struct AsciiDigits;
 
 impl CharacterSet for AsciiDigits {
-	fn contains(ch: char) -> bool {
+	fn contains(&self, ch: char) -> bool {
 		ch.is_ascii_digit()
 	}
 }
@@ -29,7 +31,7 @@ impl CharacterSet for AsciiDigits {
 pub struct AsciiLowercase;
 
 impl CharacterSet for AsciiLowercase {
-	fn contains(ch: char) -> bool {
+	fn contains(&self, ch: char) -> bool {
 		ch.is_ascii_lowercase()
 	}
 }
@@ -37,7 +39,7 @@ impl CharacterSet for AsciiLowercase {
 pub struct AsciiUppercase;
 
 impl CharacterSet for AsciiUppercase {
-	fn contains(ch: char) -> bool {
+	fn contains(&self, ch: char) -> bool {
 		ch.is_ascii_uppercase()
 	}
 }
@@ -45,7 +47,25 @@ impl CharacterSet for AsciiUppercase {
 pub struct AsciiLetters;
 
 impl CharacterSet for AsciiLetters {
-	fn contains(ch: char) -> bool {
+	fn contains(&self, ch: char) -> bool {
 		ch.is_ascii_alphabetic()
+	}
+}
+
+impl CharacterSet for &[char] {
+	fn contains(&self, ch: char) -> bool {
+		(self as &[char]).contains(&ch)
+	}
+}
+
+impl CharacterSet for &str {
+	fn contains(&self, ch: char) -> bool {
+		self.chars().any(|c| c == ch)
+	}
+}
+
+impl CharacterSet for HashSet<char> {
+	fn contains(&self, ch: char) -> bool {
+		self.contains(&ch)
 	}
 }
