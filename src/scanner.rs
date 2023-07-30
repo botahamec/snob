@@ -54,4 +54,9 @@ impl Scanner {
 
 		Some(i)
 	}
+
+	pub fn advance_if_starts_with(&mut self, substring: impl AsRef<str>) -> Option<String> {
+		let position = self.starts_with(substring)?;
+		self.goto(position)
+	}
 }
