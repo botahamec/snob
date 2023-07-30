@@ -32,6 +32,7 @@ pub trait CharacterSet: Sized {
 	}
 }
 
+#[derive(Debug, Clone, Copy)]
 pub struct AnyCharacter;
 
 impl CharacterSet for AnyCharacter {
@@ -40,6 +41,7 @@ impl CharacterSet for AnyCharacter {
 	}
 }
 
+#[derive(Debug, Clone, Copy)]
 pub struct Ascii;
 
 impl CharacterSet for Ascii {
@@ -48,6 +50,7 @@ impl CharacterSet for Ascii {
 	}
 }
 
+#[derive(Debug, Clone, Copy)]
 pub struct AsciiDigits;
 
 impl CharacterSet for AsciiDigits {
@@ -56,6 +59,7 @@ impl CharacterSet for AsciiDigits {
 	}
 }
 
+#[derive(Debug, Clone, Copy)]
 pub struct AsciiLowercase;
 
 impl CharacterSet for AsciiLowercase {
@@ -64,6 +68,7 @@ impl CharacterSet for AsciiLowercase {
 	}
 }
 
+#[derive(Debug, Clone, Copy)]
 pub struct AsciiUppercase;
 
 impl CharacterSet for AsciiUppercase {
@@ -72,6 +77,7 @@ impl CharacterSet for AsciiUppercase {
 	}
 }
 
+#[derive(Debug, Clone, Copy)]
 pub struct AsciiLetters;
 
 impl CharacterSet for AsciiLetters {
@@ -104,6 +110,7 @@ impl CharacterSet for HashSet<char> {
 	}
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct CharacterSetUnion<A: CharacterSet, B: CharacterSet> {
 	first: A,
 	second: B,
@@ -115,6 +122,7 @@ impl<A: CharacterSet, B: CharacterSet> CharacterSet for CharacterSetUnion<A, B> 
 	}
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct CharacterSetIntersection<A: CharacterSet, B: CharacterSet> {
 	first: A,
 	second: B,
@@ -126,6 +134,8 @@ impl<A: CharacterSet, B: CharacterSet> CharacterSet for CharacterSetIntersection
 	}
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+
 pub struct CharacterSetDifference<A: CharacterSet, B: CharacterSet> {
 	first: A,
 	second: B,
@@ -136,6 +146,8 @@ impl<A: CharacterSet, B: CharacterSet> CharacterSet for CharacterSetDifference<A
 		self.first.contains(ch) && !self.second.contains(ch)
 	}
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 
 pub struct CharacterSetComplement<Inner: CharacterSet> {
 	inner: Inner,

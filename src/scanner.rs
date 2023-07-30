@@ -1,5 +1,6 @@
 use crate::csets::CharacterSet;
 
+#[derive(Debug, Clone)]
 pub struct Scanner {
 	source: Box<[char]>,
 	position: usize,
