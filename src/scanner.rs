@@ -111,3 +111,24 @@ impl Scanner {
 		Some(i)
 	}
 }
+
+impl From<&str> for Scanner {
+	fn from(value: &str) -> Self {
+		Self::new(value)
+	}
+}
+
+impl From<Box<[char]>> for Scanner {
+	fn from(value: Box<[char]>) -> Self {
+		Self {
+			source: value,
+			position: 0,
+		}
+	}
+}
+
+impl AsRef<[char]> for Scanner {
+	fn as_ref(&self) -> &[char] {
+		&self.source
+	}
+}
