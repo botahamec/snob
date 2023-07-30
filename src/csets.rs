@@ -1,9 +1,12 @@
 use std::collections::HashSet;
 
-pub trait CharacterSet: Sized {
+pub trait CharacterSet {
 	fn contains(&self, ch: char) -> bool;
 
-	fn union<Other: CharacterSet>(self, other: Other) -> CharacterSetUnion<Self, Other> {
+	fn union<Other: CharacterSet>(self, other: Other) -> CharacterSetUnion<Self, Other>
+	where
+		Self: Sized,
+	{
 		CharacterSetUnion {
 			first: self,
 			second: other,
@@ -13,21 +16,30 @@ pub trait CharacterSet: Sized {
 	fn intersection<Other: CharacterSet>(
 		self,
 		other: Other,
-	) -> CharacterSetIntersection<Self, Other> {
+	) -> CharacterSetIntersection<Self, Other>
+	where
+		Self: Sized,
+	{
 		CharacterSetIntersection {
 			first: self,
 			second: other,
 		}
 	}
 
-	fn difference<Other: CharacterSet>(self, other: Other) -> CharacterSetDifference<Self, Other> {
+	fn difference<Other: CharacterSet>(self, other: Other) -> CharacterSetDifference<Self, Other>
+	where
+		Self: Sized,
+	{
 		CharacterSetDifference {
 			first: self,
 			second: other,
 		}
 	}
 
-	fn complement(self) -> CharacterSetComplement<Self> {
+	fn complement(self) -> CharacterSetComplement<Self>
+	where
+		Self: Sized,
+	{
 		CharacterSetComplement { inner: self }
 	}
 }
