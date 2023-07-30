@@ -33,6 +33,10 @@ impl Scanner {
 		self.position
 	}
 
+	pub fn is_at_end(&self) -> bool {
+		self.position == self.source.len()
+	}
+
 	pub fn goto(&mut self, position: usize) -> Option<String> {
 		// allow reverse ranges
 		let production = if self.position < position {
