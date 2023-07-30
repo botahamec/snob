@@ -25,7 +25,7 @@ impl Scanner {
 		self.len() == 0
 	}
 
-	pub fn get_char_at(&self, index: usize) -> Option<char> {
+	pub fn char_at(&self, index: usize) -> Option<char> {
 		self.source.get(index).cloned()
 	}
 
