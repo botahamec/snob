@@ -1,8 +1,16 @@
 [package]
 name = "snob"
 version = "0.1.0"
+authors = ["Mica White <botahamec@outlook.com>"]
 edition = "2021"
+rust-version = "1.66.1"
+description = "String analysis inspired by the Icon programming language"
+documentation = "https://docs.rs/snob"
+readme = "README.md"
+repository = "https://github.com/botahamec/snob/"
+license = "0BSD"
+keywords = ["parser"]
+categories = ["parsing"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
+[package.metadata]
+msrv = "1.66.1"
