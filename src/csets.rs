@@ -154,6 +154,16 @@ impl CharacterSet for AsciiDigits {
 	}
 }
 
+/// Contains the ASCII whitespace characters
+#[derive(Debug, Clone, Copy)]
+pub struct AsciiWhitespace;
+
+impl CharacterSet for AsciiWhitespace {
+	fn contains(&self, ch: char) -> bool {
+		ch.is_ascii_whitespace()
+	}
+}
+
 /// Contains all lowercase ASCII letters, a-z
 #[derive(Debug, Clone, Copy)]
 pub struct AsciiLowercase;
