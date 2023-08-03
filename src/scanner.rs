@@ -198,11 +198,37 @@ impl Scanner {
 	/// # Some(())
 	/// # }
 	pub fn find_substring(&self, substring: impl AsRef<str>) -> Option<usize> {
-		self.source
-			.get(self.position..)?
-			.iter()
-			.collect::<String>()
-			.find(substring.as_ref())
+		if substring.as_ref().is_empty() {
+			return Some(self.position);
+		}
+
+		let chars: Vec<char> = substring.as_ref().chars().collect();
+		let mut i = self.position;
+		let mut chars_i = 0;
+		let mut start = None;
+
+		while i < self.len() {
+			if self.source[i] == chars[chars_i] {
+				if chars_i == 0 {
+					start = Some(i);
+				}
+
+				chars_i += 1;
+
+				if let Some(start) = start {
+					if chars_i == chars.len() {
+						return Some(start);
+					}
+				}
+			} else {
+				chars_i = 0;
+				start = None;
+			}
+
+			i += 1;
+		}
+
+		start
 	}
 
 	/// If `source[position..]` starts with the given string, then this returns
