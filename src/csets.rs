@@ -1,8 +1,45 @@
 use std::collections::HashSet;
 
+/// An unordered set of characters
+///
+/// # Example
+///
+/// ```
+/// use snob::csets::CharacterSet;
+///
+/// struct AsciiCharacter;
+///
+/// impl CharacterSet for AsciiCharacter {
+///     fn contains(&self, ch: char) -> bool {
+///         ch.is_ascii()
+///     }
+/// }
+/// ```
 pub trait CharacterSet {
+	/// Returns `true` if the character set contains the given character.
+	///
+	/// # Example
+	///
+	/// ```
+	/// use snob::csets::AsciiLetters;
+	///
+	/// assert!(AsciiLetters.contains('h'));
+	/// assert!(!AsciiLetters.contains(' '));
+	/// ```
 	fn contains(&self, ch: char) -> bool;
 
+	/// Returns a [`CharacterSet`] that contains the characters in the `self`
+	/// set, as well as any characters in the given `other` character set.
+	///
+	/// # Example
+	///
+	/// ```
+	/// use snob::csets::AsciiLetters;
+	///
+	/// let cset = AsciiLetters.union(' ');
+	/// assert!(cset.contains('h'));
+	/// assert!(cset.contains(' '));
+	/// ```
 	fn union<Other: CharacterSet>(self, other: Other) -> CharacterSetUnion<Self, Other>
 	where
 		Self: Sized,
@@ -13,6 +50,19 @@ pub trait CharacterSet {
 		}
 	}
 
+	/// Returns a [`CharacterSet`] that contains only the characters in both
+	/// of `self` and `other`.
+	///
+	/// # Example
+	///
+	/// ```
+	/// use snob::csets::AsciiLetters;
+	///
+	/// let cset = AsciiLetters.intersection("Hello, world");
+	/// assert!(cset.contains('e'));
+	/// assert!(!cset.contains('a'));
+	/// assert!(!cset.contains(' '));
+	/// ```
 	fn intersection<Other: CharacterSet>(
 		self,
 		other: Other,
@@ -26,6 +76,19 @@ pub trait CharacterSet {
 		}
 	}
 
+	/// Returns a [`CharacterSet`] that contains the characters in the `self`
+	/// character set, unless they are also contained in `other`.
+	///
+	/// # Example
+	///
+	/// ```
+	/// use snob::csets::AsciiLetters;
+	///
+	/// let cset = AsciiLetters.intersection("Hello, world");
+	/// assert!(cset.contains('a'));
+	/// assert!(!cset.contains('e'));
+	/// assert!(!cset.contains(' '));
+	/// ```
 	fn difference<Other: CharacterSet>(self, other: Other) -> CharacterSetDifference<Self, Other>
 	where
 		Self: Sized,
@@ -36,6 +99,18 @@ pub trait CharacterSet {
 		}
 	}
 
+	/// Returns a [`CharacterSet`] that contains all of the characters that are
+	/// NOT contained in the `self` character set.
+	///
+	/// # Example
+	///
+	/// ```
+	/// use snob::csets::AsciiLetters;
+	///
+	/// let cset = AsciiLetters.complement();
+	/// assert!(!cset.contains('a'));
+	/// assert!(cset.contains(' '));
+	/// ```
 	fn complement(self) -> CharacterSetComplement<Self>
 	where
 		Self: Sized,
@@ -44,6 +119,7 @@ pub trait CharacterSet {
 	}
 }
 
+/// Contains all Unicode characters
 #[derive(Debug, Clone, Copy)]
 pub struct AnyCharacter;
 
@@ -53,6 +129,7 @@ impl CharacterSet for AnyCharacter {
 	}
 }
 
+/// Contains all ASCII characters
 #[derive(Debug, Clone, Copy)]
 pub struct Ascii;
 
@@ -62,6 +139,7 @@ impl CharacterSet for Ascii {
 	}
 }
 
+/// Contains the ASCII digits, 0-9
 #[derive(Debug, Clone, Copy)]
 pub struct AsciiDigits;
 
@@ -71,6 +149,7 @@ impl CharacterSet for AsciiDigits {
 	}
 }
 
+/// Contains all lowercase ASCII letters, a-z
 #[derive(Debug, Clone, Copy)]
 pub struct AsciiLowercase;
 
@@ -80,6 +159,7 @@ impl CharacterSet for AsciiLowercase {
 	}
 }
 
+/// Contains all uppercase ASCII letters, A-Z
 #[derive(Debug, Clone, Copy)]
 pub struct AsciiUppercase;
 
@@ -89,6 +169,7 @@ impl CharacterSet for AsciiUppercase {
 	}
 }
 
+/// Containes all ASCII letters: a-z, A-Z
 #[derive(Debug, Clone, Copy)]
 pub struct AsciiLetters;
 
@@ -122,6 +203,9 @@ impl CharacterSet for HashSet<char> {
 	}
 }
 
+/// A union of two [`CharacterSet`]s.
+///
+/// This is created by calling [`CharacterSet::union`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct CharacterSetUnion<A: CharacterSet, B: CharacterSet> {
 	first: A,
@@ -134,6 +218,9 @@ impl<A: CharacterSet, B: CharacterSet> CharacterSet for CharacterSetUnion<A, B> 
 	}
 }
 
+/// An intersection of two [`CharacterSet`]s.
+///
+/// This is created by calling [`CharacterSet::intersection`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct CharacterSetIntersection<A: CharacterSet, B: CharacterSet> {
 	first: A,
@@ -146,8 +233,10 @@ impl<A: CharacterSet, B: CharacterSet> CharacterSet for CharacterSetIntersection
 	}
 }
 
+/// The difference of two [`CharacterSet`]s.
+///
+/// This is created by calling [`CharacterSet::difference`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-
 pub struct CharacterSetDifference<A: CharacterSet, B: CharacterSet> {
 	first: A,
 	second: B,
@@ -159,8 +248,10 @@ impl<A: CharacterSet, B: CharacterSet> CharacterSet for CharacterSetDifference<A
 	}
 }
 
+/// The complement of a [`CharacterSet`].
+///
+/// This is created by calling [`CharacterSet::complement`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-
 pub struct CharacterSetComplement<Inner: CharacterSet> {
 	inner: Inner,
 }
