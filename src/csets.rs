@@ -21,6 +21,7 @@ pub trait CharacterSet {
 	/// # Example
 	///
 	/// ```
+	/// use snob::csets::CharacterSet;
 	/// use snob::csets::AsciiLetters;
 	///
 	/// assert!(AsciiLetters.contains('h'));
@@ -34,6 +35,7 @@ pub trait CharacterSet {
 	/// # Example
 	///
 	/// ```
+	/// use snob::csets::CharacterSet;
 	/// use snob::csets::AsciiLetters;
 	///
 	/// let cset = AsciiLetters.union(' ');
@@ -56,6 +58,7 @@ pub trait CharacterSet {
 	/// # Example
 	///
 	/// ```
+	/// use snob::csets::CharacterSet;
 	/// use snob::csets::AsciiLetters;
 	///
 	/// let cset = AsciiLetters.intersection("Hello, world");
@@ -82,9 +85,10 @@ pub trait CharacterSet {
 	/// # Example
 	///
 	/// ```
+	/// use snob::csets::CharacterSet;
 	/// use snob::csets::AsciiLetters;
 	///
-	/// let cset = AsciiLetters.intersection("Hello, world");
+	/// let cset = AsciiLetters.difference("Hello, world");
 	/// assert!(cset.contains('a'));
 	/// assert!(!cset.contains('e'));
 	/// assert!(!cset.contains(' '));
@@ -105,6 +109,7 @@ pub trait CharacterSet {
 	/// # Example
 	///
 	/// ```
+	/// use snob::csets::CharacterSet;
 	/// use snob::csets::AsciiLetters;
 	///
 	/// let cset = AsciiLetters.complement();
